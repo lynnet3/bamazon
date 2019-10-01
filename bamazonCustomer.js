@@ -20,23 +20,33 @@ var connection = mysql.createConnection({
         throw err;
         
         inquirer
-        .prompt({
-            type:"rawlist",
-            message:"Welcome, to bamazon here's our list of items what would like to purchase?",
-            choices: function(){
-                var itemsArr = [];
-                for (var i = 0; i < res.length; i++){
-                    itemsArr.push(res[i].item_name);
-                }
+        .prompt([
+            {
+                type:"rawlist",
+                message:"Welcome, to bamazon here's our list of items what would like to purchase?",
+                choices: function(){
+                    var itemsArr = [];
+                    for (var i = 0; i < res.length; i++){
+                        itemsArr.push(res[i].item_name);
+                    }
+                    return itemsArr;
+                },
+                name:"products"
+        },
+        {
+            type:"input",
+            message: "How many would you like?",
+            name: "amount"
+        }
+    ])
+    .then(function(answer){
+        var chosen;
+        for (var i = 0; i < res.length; i++){
+            if (res[i].item_name === answer.choice){
+                chosen = res[i];
             }
-            name:"products"
-        })
-
+        }
+    })
   })
 
 }
-
-
-
-
-  
