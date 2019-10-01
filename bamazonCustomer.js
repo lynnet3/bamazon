@@ -33,20 +33,48 @@ var connection = mysql.createConnection({
                 },
                 name:"products"
         },
-        {
-            type:"input",
-            message: "How many would you like?",
-            name: "amount"
-        }
-    ])
+        
+    ]);
     .then(function(answer){
         var chosen;
         for (var i = 0; i < res.length; i++){
             if (res[i].item_name === answer.choice){
                 chosen = res[i];
+                amount();
+            }else{
+                console.log("That item is not availble");
+                start();
             }
         }
-    })
+    });
   })
+
+}
+
+function amount(){
+    connection.query("SELECT *FROM products" function(err, res){
+        if (err)
+        throw err;
+        inquirer
+        .prompt([
+            {
+                type:"input",
+                message: "How many would you like?",
+                name: "amount"
+            }
+        ])
+    .then(function(howMany){
+        if (){
+            buy();
+        }else{
+            console.log("Sorry we don't have that many in stock");
+            start();
+        }
+    });
+    });
+    
+        
+}
+function buy(){
 
 }
