@@ -15,13 +15,28 @@ var connection = mysql.createConnection({
   });
 
   function start(){
-      inquirer
+    connection.query("SELECT * FROM products", function(err, res){
+        if (err) 
+        throw err;
+        
+        inquirer
         .prompt({
-            type:"input",
+            type:"rawlist",
             message:"Welcome, to bamazon here's our list of items what would like to purchase?",
+            choices: function(){
+                var itemsArr = [];
+                for (var i = 0; i < res.length; i++){
+                    itemsArr.push(res[i].item_name);
+                }
+            }
             name:"products"
         })
-        .then(function(answer){
-            
-        })
-  }
+
+  })
+
+}
+
+
+
+
+  
