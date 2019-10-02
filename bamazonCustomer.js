@@ -52,7 +52,7 @@ var connection = mysql.createConnection({
 }
 
 function amount(){
-    connection.query("SELECT *FROM products", function(err, res){
+    connection.query("SELECT * FROM products", function(err, res){
         if (err)
         throw err;
         inquirer
@@ -83,5 +83,35 @@ function amount(){
         
 }
 function buy(){
-
+connection.query("UPDATE products SET ? WHERE ?"
+    [
+        {
+            stock_quantity : quantity
+        },
+        {
+            id : products.item_id
+        }
+    ],
+    function(err, res){
+        if (err) 
+        throw err;
+        console.log(res);
+        console.log ("Your item has been purchesed");
+        readProducts();
+    }
+)
 }
+
+function readProducts() {
+    console.log("Selecting all products...\n");
+    connection.query("SELECT * FROM products", function(err, res) {
+      if (err) throw err;
+      // Log all results of the SELECT statement
+      console.log(res);
+      console.log("Thank you for shopping with us have a good day")
+      start();
+    });
+  }
+  
+
+
