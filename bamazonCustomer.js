@@ -34,7 +34,7 @@ var connection = mysql.createConnection({
                 name:"products"
         },
         
-    ]);
+    ])
     .then(function(answer){
         var chosen;
         for (var i = 0; i < res.length; i++){
@@ -52,7 +52,7 @@ var connection = mysql.createConnection({
 }
 
 function amount(){
-    connection.query("SELECT *FROM products" function(err, res){
+    connection.query("SELECT *FROM products", function(err, res){
         if (err)
         throw err;
         inquirer
@@ -60,11 +60,18 @@ function amount(){
             {
                 type:"input",
                 message: "How many would you like?",
-                name: "amount"
+                name: "amount",
+                validate: function(val){
+                    if (isNaN(val) === false){
+                        return true;
+                    }
+                    return true;
+                }
             }
         ])
     .then(function(howMany){
-        if (){
+        var quantity = parseInt(howMany.quantity);
+        if (quantity< products.stock_quantity){
             buy();
         }else{
             console.log("Sorry we don't have that many in stock");
