@@ -23,11 +23,11 @@ var connection = mysql.createConnection({
         .prompt([
             {
                 type:"rawlist",
-                message:"Welcome, to bamazon here's our list of items what would like to purchase?",
+                message:"Welcome to bamazon, here's our list of items what would like to purchase?",
                 choices: function(){
                     var itemsArr = [];
                     for (var i = 0; i < res.length; i++){
-                        itemsArr.push(res[i].item_name);
+                        itemsArr.push(res[i].product_name);
                     }
                     return itemsArr;
                 },
@@ -38,7 +38,7 @@ var connection = mysql.createConnection({
     .then(function(answer){
         var chosen;
         for (var i = 0; i < res.length; i++){
-            if (res[i].item_name === answer.choice){
+            if (res[i].product_name === answer.choice){
                 chosen = res[i];
                 amount();
             }else{
