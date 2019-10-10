@@ -1,4 +1,4 @@
-var mysql = require ("mysql");
+var mysql = require("mysql");
 var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
@@ -7,111 +7,106 @@ var connection = mysql.createConnection({
     user: "root",
     password: "",
     database: "bamazon"
-  });
-  
-  connection.connect(function(err) {
-    if (err) throw err;
-    start();
-  });
+});
 
-  function start(){
-    connection.query("SELECT * FROM products", function(err, res){
-        if (err) 
-        throw err;
-        
+connection.connect(function (err) {
+    if (err) throw err;
+
+    console.log("its working");
+    start();
+});
+
+function start() {
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err)
+            throw err;
+
         inquirer
-        .prompt([
-            {
-                type:"rawlist",
-                message:"Welcome to bamazon, here's our list of items what would like to purchase?",
-                choices: function(){
-                    var itemsArr = [];
-                    for (var i = 0; i < res.length; i++){
-                        itemsArr.push(res[i].product_name);
-                    }
-                    return itemsArr;
+            .prompt([{
+                    type: "rawlist",
+                    message: "Welcome to bamazon, here's our list of items what would like to purchase?",
+                    choices: function () {
+                        var itemsArr = [];
+                        for (var i = 0; i < res.length; i++) {
+                            itemsArr.push(res[i].product_name);
+                        }
+                        return itemsArr;
+                    },
+                    name: "products"
                 },
-                name:"products"
-        },
-        
-    ])
-    .then(function(answer){
-        var chosen;
-        for (var i = 0; i < res.length; i++){
-            if (res[i].product_name === answer.choice){
-                chosen = res[i];
-                amount();
-            }else{
-                console.log("That item is not availble");
-                start();
-            }
-        }
-    });
-  })
+
+            ])
+            .then(function (answer) {
+                var chosen;
+                for (var i = 0; i < res.length; i++) {
+                    if (res[i].product_name === answer.choice) {
+                        chosen = res[i];
+                        amount();
+                    } else {
+                        console.log("That item is not availble");
+                        start();
+                    }
+                }
+            });
+    })
 
 }
 
-function amount(){
-    connection.query("SELECT * FROM products", function(err, res){
+function amount() {
+    connection.query("SELECT * FROM products", function (err, res) {
         if (err)
-        throw err;
+            throw err;
         inquirer
-        .prompt([
-            {
-                type:"input",
+            .prompt([{
+                type: "input",
                 message: "How many would you like?",
                 name: "amount",
-                validate: function(val){
-                    if (isNaN(val) === false){
+                validate: function (val) {
+                    if (isNaN(val) === false) {
                         return true;
                     }
                     return true;
                 }
-            }
-        ])
-    .then(function(howMany){
-        var quantity = parseInt(howMany.quantity);
-        if (quantity< products.stock_quantity){
-            buy();
-        }else{
-            console.log("Sorry we don't have that many in stock");
-            start();
-        }
+            }])
+            .then(function (howMany) {
+                var quantity = parseInt(howMany.quantity);
+                if (quantity < products.stock_quantity) {
+                    buy();
+                } else {
+                    console.log("Sorry we don't have that many in stock");
+                    start();
+                }
+            });
     });
-    });
-    
-        
+
+
 }
-function buy(){
-connection.query("UPDATE products SET ? WHERE ?"
-    [
-        {
-            stock_quantity : quantity
-        },
-        {
-            id : products.item_id
+
+function buy() {
+    connection.query("UPDATE products SET ? WHERE ?" [{
+                stock_quantity: quantity
+            },
+            {
+                id: products.item_id
+            }
+        ],
+        function (err, res) {
+            if (err)
+                throw err;
+            console.log(res);
+            console.log("Your item has been purchesed");
+            readProducts();
         }
-    ],
-    function(err, res){
-        if (err) 
-        throw err;
-        console.log(res);
-        console.log ("Your item has been purchesed");
-        readProducts();
-    }
-)
+    )
 }
 
 function readProducts() {
     console.log("Selecting all products...\n");
-    connection.query("SELECT * FROM products", function(err, res) {
-      if (err) throw err;
-      // Log all results of the SELECT statement
-      console.log(res);
-      console.log("Thank you for shopping with us have a good day")
-      start();
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        // Log all results of the SELECT statement
+        console.log(res);
+        console.log("Thank you for shopping with us have a good day")
+        start();
     });
-  }
-  
-
-
+}
