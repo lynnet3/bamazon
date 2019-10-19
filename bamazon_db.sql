@@ -32,4 +32,3 @@ INSERT INTO products(product_name, department_name, price, stock_quantity)
 	    VALUES("Dreadloc Tightrning Spray", "Beauty", 17.95, 80);
 INSERT INTO products(product_name, department_name, price, stock_quantity)
 	    VALUES("Mango & Lime Oil", "Beauty", 60.80, 30);
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'
