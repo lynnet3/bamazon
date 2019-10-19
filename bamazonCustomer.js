@@ -34,53 +34,74 @@ function start() {
                     },
                     name: "products"
                 },
+                {
+                    type: "input",
+                    message: "How many would you like?",
+                    name: "amount",
+                    validate: function (val) {
+                        if (isNaN(val) === false) {
+                            return true;
+                        }
+                        return true;
+                    }
+                }
 
             ])
             .then(function (answer) {
                 var chosen;
-                for (var i = 0; i < res.length; i++) {
-                    if (res[i].product_name === answer.choice) {
-                        chosen = res[i];
-                        amount();
-                    } else {
-                        console.log("That item is not availble");
-                        start();
+                var quantity = parseInt(answer.quantity);
+                var howMuch = parseFloat(((res[chosen].price) * quantity).toFixed(2));
+
+                connection.query("SELECT * FROM products", function (err, res) {
+                        for (var i = 0; i < res.length; i++) {
+                            if (res[i].product_name === answer.choice) {
+                                chosen = res[i];
+
+                            }
+
+                            if (quantity < res[chosen].stock_quantity) {
+                                console.log("Your total will come to" + howMuch.toFixed(2));
+                                buy();
+                            }
+
+                        }
                     }
-                }
+                    //amount();
+                )
             });
     })
 
 }
 
-function amount() {
-    connection.query("SELECT * FROM products", function (err, res) {
-        if (err)
-            throw err;
-        inquirer
-            .prompt([{
-                type: "input",
-                message: "How many would you like?",
-                name: "amount",
-                validate: function (val) {
-                    if (isNaN(val) === false) {
-                        return true;
-                    }
-                    return true;
-                }
-            }])
-            .then(function (howMany) {
-                var quantity = parseInt(howMany.quantity);
-                if (quantity < products.stock_quantity) {
-                    buy();
-                } else {
-                    console.log("Sorry we don't have that many in stock");
-                    start();
-                }
-            });
-    });
+// function amount() {
+//     connection.query("SELECT * FROM products", function (err, res) {
+//         if (err)
+//             throw err;
+//         inquirer
+//             .prompt([{
+//                 type: "input",
+//                 message: "How many would you like?",
+//                 name: "amount",
+//                 // validate: function (val) {
+//                 //     if (isNaN(val) === false) {
+//                 //         return true;
+//                 //     }
+//                 //     return true;
+//                 // }
+//             }])
+//             .then(function (howMany) {
+//                 var quantity = parseInt(howMany.quantity);
+//                 if (quantity < products.stock_quantity) {
+//                     buy();
+//                 } else {
+//                     console.log("Sorry we don't have that many in stock");
+//                     start();
+//                 }
+//             });
+//     });
 
 
-}
+// }
 
 function buy() {
     connection.query("UPDATE products SET ? WHERE ?" [{
