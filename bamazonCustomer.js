@@ -48,11 +48,12 @@ function start() {
 
             ])
             .then(function (answer) {
-                var chosen;
-                var quantity = parseInt(answer.quantity);
-                var howMuch = parseFloat(((res[chosen].price) * quantity).toFixed(2));
+
 
                 connection.query("SELECT * FROM products", function (err, res) {
+                        var chosen;
+                        var quantity = parseInt(answer.quantity);
+                        var howMuch = parseFloat(((res[chosen].price) * quantity).toFixed(2));
                         for (var i = 0; i < res.length; i++) {
                             if (res[i].product_name === answer.choice) {
                                 chosen = res[i];
