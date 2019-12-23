@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var Table = reqire("cli-table2");
+var Table = require("cli-table3");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -13,14 +13,31 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var start = function(){
-    connection.query("SELECT * FROM products", function (err, res){
+    connection.query("SELECT * FROM products", function (err, res) {
         if (err)
         throw err;
 
         console.log("   -----------------------------     ");
-        console.log("           Welcome to bamazon        ");
+        console.log("           Welcome to bamazon!       ");
         console.log("   -----------------------------     ");
         console.log("Here's the list of items for purchase");
+        console.log("");
+        
+        var table = new Table({
+            head: ["In Stock", "Product","Price"],
+            colWidths: [20, 50, 10],
+            colAligns:["center", "left", "right"],
+            style: {
+                head:["aqua"],
+                compact: true
+            }
+        });
+        for (var i = 0; i < res.length; i++) {
+            table.push([res[i].stock_quantity, res[i].product_name, res[i].price]);
+        }
+        console.log(table.toString());
+        //shop();
+
     })
 }
 // connection.connect(function (err) {
@@ -145,3 +162,4 @@ var start = function(){
 //         start();
 //     });
 // }
+start();
