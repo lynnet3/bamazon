@@ -9,5 +9,4 @@ If there isn't enough of the item that you chose then you'll be told that there 
 [](screenShots/start-of-list.png);
 [](screenShots/the-rest-of-the-list.png)
 [](screenShots/the-amount.png)
-![The new working version of the app](screenShots/new-full-working.png)
-![Another item](screenShots/other-working.png)
+![](screenShots/new-full-working.png)
