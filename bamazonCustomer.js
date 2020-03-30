@@ -42,44 +42,44 @@ var start = function () {
 };
 
 var shop = function () {
-        inquirer
-            .prompt({
-                type: "input",
-                message: "What from the items above would you like to buy?",
-                name: "products"
-            }).then(function (anw1) {
-                var chosen = anw1.products;
-                connection.query("SELECT * FROM products WHERE item_id=?", chosen, function (err, res) {
-                    if (err)
-                        throw err;
-                    if (res.length === 0) {
-                        console.log("Please pick an item from our list");
-                        shop();
-                    } else {
-                        inquirer
-                            .prompt({
-                                type: "input",
-                                message: "How many would you like?",
-                                name: "amount",
-                            })
-                            .then(function(anw2){
-                                var amount = anw2.amount;
-                                if (amount > res[0].stock_quantity){
-                                    console.log("Sorry we only have" + res[0].stock_quantity + "available");
-                                } else{
-                                    console.log(res[0].product_name + "has been purchesed")
-                                    console.log(amount + "at" + res[0].price);
-                                }
-                                var newStock = res[0].stock_quantity - amount;
-                                connection.query("UPDATE products SET stock_quantity =" + newStock + "WHERE item_id =" + res[0].item_id, function(err, resUp){
-                                    if (err)
+    inquirer
+        .prompt({
+            type: "input",
+            message: "What from the items above would you like to buy?",
+            name: "products"
+        }).then(function (anw1) {
+            var chosen = anw1.products;
+            connection.query("SELECT * FROM products WHERE item_id=?", chosen, function (err, res) {
+                if (err)
+                    throw err;
+                if (res.length === 0) {
+                    console.log("Please pick an item from our list");
+                    shop();
+                } else {
+                    inquirer
+                        .prompt({
+                            type: "input",
+                            message: "How many would you like?",
+                            name: "amount",
+                        })
+                        .then(function (anw2) {
+                            var amount = anw2.amount;
+                            if (amount > res[0].stock_quantity) {
+                                console.log("Sorry we only have" + res[0].stock_quantity + "available");
+                            } else {
+                                console.log(res[0].product_name + " has been purchesed")
+                                console.log(amount + " at " + res[0].price);
+                            }
+                            var newStock = res[0].stock_quantity - amount;
+                            connection.query("UPDATE products SET stock_quantity =" + newStock + "WHERE item_id =" + res[0].item_id, function (err, resUp) {
+                                if (err)
                                     throw err;
-                                    console.log("Your items will be shipped soon thatnk you for shopping with us");
-                                    connection.end();
-                                });
+                                console.log("Your items will be shipped soon thatnk you for shopping with us");
+                                connection.end();
                             });
-                    }
-                });
+                        });
+                }
             });
-         }
-        start();
+        });
+}
+start();
